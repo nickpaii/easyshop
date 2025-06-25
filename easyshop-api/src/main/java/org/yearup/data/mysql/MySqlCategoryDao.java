@@ -94,7 +94,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
                 """;
         try  (Connection connection = getConnection()) {
 
-            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setInt(1, category.getCategoryId());
             preparedStatement.setString(2, category.getName());
@@ -102,24 +102,62 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
 
             preparedStatement.executeUpdate();
 
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                if (resultSet.next()) {
+                    int newCategoryId = resultSet.getInt(1);
+                    category.setCategoryId(newCategoryId);
+                }
+            }
 
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return category;
         }
 
     @Override
     public void update(int categoryId, Category category)
     {
-        // update category
+        String sql = """
+                UPDATE categories
+                SET category_Id = ?,
+                name = ?,
+                description = ?
+                WHERE category_Id = ?;
+                """;
+
+        try (Connection connection = getConnection()) {
+            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setInt(1, category.getCategoryId());
+            preparedStatement.setString(2, category.getName());
+            preparedStatement.setString(3, category.getDescription());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void delete(int categoryId)
     {
-        // delete category
+        String sql = """
+                DELETE FROM categories
+                WHERE category_Id = ?;
+                """;
+
+        try (Connection connection = getConnection()) {
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, categoryId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
     }
 
     private Category mapRow(ResultSet row) throws SQLException
