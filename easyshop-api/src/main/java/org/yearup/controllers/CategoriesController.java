@@ -19,14 +19,16 @@ import java.util.List;
 @CrossOrigin
 public class CategoriesController
 {
-    @Autowired
     private CategoryDao categoryDao;
-    @Autowired
     private ProductDao productDao;
 
 
     // create an Autowired controller to inject the categoryDao and ProductDao
-
+    @Autowired
+    public CategoriesController(CategoryDao categoryDao, ProductDao productDao) {
+        this.categoryDao = categoryDao;
+        this.productDao = productDao;
+    }
 
     // add the appropriate annotation for a get action
     @GetMapping
