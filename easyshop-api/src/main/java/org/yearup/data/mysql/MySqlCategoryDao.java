@@ -19,6 +19,8 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         super(dataSource);
 
     }
+    private ResultSet resultSet = null;
+    private PreparedStatement preparedStatement = null;
 
     @Override
     public List<Category> getAllCategories()
@@ -30,8 +32,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
                 FROM categories
                 """;
 
-        ResultSet resultSet = null;
-        PreparedStatement preparedStatement = null;
+
         try  (Connection connection = getConnection()) {
 
 
@@ -55,16 +56,59 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public Category getById(int categoryId)
     {
-        // get category by id
+        String sql = """
+                SELECT * 
+                FROM categories
+                WHERE category_Id = ?
+                """;
+
+;
+        try  (Connection connection = getConnection()) {
+
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, categoryId);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                Category category = new Category();
+                category.setCategoryId(resultSet.getInt("category_id"));
+                category.setName(resultSet.getString("name"));
+                category.setDescription(resultSet.getString("description"));
+
+                return category;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public Category create(Category category)
     {
-        // create a new category
+        String sql = """
+                INSERT INTO categories (category_Id, name, description)
+                VALUES (?, ?, ?);
+                """;
+        try  (Connection connection = getConnection()) {
+
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, category.getCategoryId());
+            preparedStatement.setString(2, category.getName());
+            preparedStatement.setString(3, category.getDescription());
+
+            preparedStatement.executeUpdate();
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
-    }
+        }
 
     @Override
     public void update(int categoryId, Category category)
