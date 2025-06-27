@@ -1,4 +1,4 @@
-# easyshop
+# EasyShop E-Commerce API
 
 This capstone project is an e-commerce application, or an online store, for a company
 named EasyShop.
