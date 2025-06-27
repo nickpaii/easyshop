@@ -52,7 +52,6 @@ class MySqlProductDaoTest extends BaseDaoTestClass
 
         Product product = new Product();
 
-                product.setProductId(1);
                 product.setName("Fake Product");
                 product.setDescription("A totally real product. Not fake at all.");
                 product.setCategoryId(1);
@@ -65,7 +64,11 @@ class MySqlProductDaoTest extends BaseDaoTestClass
 
         var actual = dao.create(product);
 
-        assertEquals(product, actual);
+        assertEquals("Fake Product", actual.getName());
+        assertEquals("A totally real product. Not fake at all.", actual.getDescription());
+        assertEquals("", actual.getColor());
+        assertEquals(1, actual.getStock());
+        assertEquals(new BigDecimal("400.00"), actual.getPrice());
     }
 
 }
