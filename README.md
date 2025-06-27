@@ -4,7 +4,7 @@ This capstone project is an e-commerce application, or an online store, for a co
 named EasyShop.
 
 With a full website UI and Spring Boot API skeleton project provided, I was tasked with creating methods inside the API
-to complete the websites functionality.
+to complete the website's functionality.
 
 The website uses a Spring Boot API project for the backend server, with a
 MySQL database for data storage and uses Postman to test functionality with the server.
