@@ -71,4 +71,45 @@ class MySqlProductDaoTest extends BaseDaoTestClass
         assertEquals(new BigDecimal("400.00"), actual.getPrice());
     }
 
+    @Test
+    public void update_shouldReturn_updatedProduct() {
+        Product product = new Product();
+
+            //Arrange
+            product.setName("Laptop");
+            product.setDescription("A high-performance laptop for work and entertainment.");
+            product.setCategoryId(1);
+            product.setColor("");
+            product.setPrice(new BigDecimal("899.99"));
+            product.setStock(1);
+            product.setFeatured(false);
+            product.setImageUrl("");
+
+            Product savedProduct = dao.create(product);
+
+            int savedProductId = savedProduct.getProductId();
+
+            //Act
+            Product updatedProduct = new Product();
+
+            updatedProduct.setName("Laptop");
+            updatedProduct.setDescription("gaming laptop");
+            updatedProduct.setCategoryId(1);
+            updatedProduct.setColor("");
+            updatedProduct.setPrice(new BigDecimal("999.99"));
+            updatedProduct.setStock(1);
+            updatedProduct.setFeatured(false);
+            updatedProduct.setImageUrl("");
+
+            dao.update(savedProductId, updatedProduct);
+
+            //Assert
+
+            Product verify = dao.getById(savedProductId);
+            assertEquals(new BigDecimal("999.99"), verify.getPrice());
+            assertEquals("gaming laptop", verify.getDescription());
+            assertEquals(savedProductId, verify.getProductId());
+
+    }
+
 }
